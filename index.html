@@ -12,14 +12,9 @@
     --bg: #0a0a0a;
     --surface: #111;
     --border: #2a2a2a;
-    --accent: #e8ff47;
-    --accent2: #ff4757;
-    --accent3: #47c8ff;
     --text: #e0e0e0;
     --muted: #555;
-    --node-band: #e8ff47;
-    --node-artist: #ff4757;
-    --link: #333;
+    --link: #2e2e2e;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,11 +30,11 @@
   }
 
   header {
-    padding: 10px 16px;
+    padding: 10px 18px;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
     flex-shrink: 0;
     background: var(--surface);
   }
@@ -48,140 +43,76 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.5rem;
     letter-spacing: 0.08em;
-    color: var(--accent);
+    color: #e8ff47;
     white-space: nowrap;
   }
 
-  .legend {
+  #legend {
     display: flex;
-    gap: 14px;
-    font-size: 0.62rem;
-    color: var(--muted);
-  }
-
-  .legend span { display: flex; align-items: center; gap: 5px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .dot.artist { background: var(--node-artist); }
-  .dot.band { background: var(--node-band); }
-
-  /* GitHub status pill */
-  #gh-status {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 10px 18px;
     font-size: 0.6rem;
     color: var(--muted);
-    white-space: nowrap;
   }
 
-  #gh-status .pill {
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: color 0.15s;
+    user-select: none;
+  }
+
+  .legend-item:hover { color: var(--text); }
+  .legend-item.dimmed { opacity: 0.3; }
+  .legend-swatch { width: 14px; height: 14px; flex-shrink: 0; }
+
+  #status {
+    margin-left: auto;
     font-size: 0.58rem;
-    letter-spacing: 0.05em;
+    color: var(--muted);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  #gh-status .pill.ok   { border-color: #3fa; color: #3fa; }
-  #gh-status .pill.err  { border-color: var(--accent2); color: var(--accent2); }
-  #gh-status .pill.busy { border-color: var(--accent); color: var(--accent); }
-
-  .hdr-btn {
+  .reload-btn {
     background: transparent;
     border: 1px solid var(--border);
     color: var(--muted);
     font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    padding: 4px 10px;
+    font-size: 0.58rem;
+    padding: 3px 9px;
     border-radius: 2px;
     cursor: pointer;
     transition: color 0.15s, border-color 0.15s;
-    white-space: nowrap;
   }
 
-  .hdr-btn:hover { color: var(--accent); border-color: var(--accent); }
-  .hdr-btn.save  { border-color: var(--accent3); color: var(--accent3); }
-  .hdr-btn.save:hover { background: var(--accent3); color: #000; }
+  .reload-btn:hover { color: #e8ff47; border-color: #e8ff47; }
 
-  /* MODAL */
-  .modal-backdrop {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-  }
+  .main { display: flex; flex: 1; overflow: hidden; }
 
-  .modal-backdrop.open { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 24px;
-    width: 440px;
-    max-width: 95vw;
-  }
-
-  .modal h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
-
-  .modal p {
-    font-size: 0.65rem;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 12px;
-  }
-
-  .modal p a { color: var(--accent3); text-decoration: none; }
-  .modal p a:hover { text-decoration: underline; }
-
-  .modal .form-row { margin-bottom: 10px; }
-
-  .modal-btns { display: flex; gap: 8px; margin-top: 16px; }
-  .modal-btns .btn { flex: 1; }
-
-  /* MAIN LAYOUT */
-  .main {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  #graph {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
+  #graph { flex: 1; position: relative; overflow: hidden; }
 
   svg { width: 100%; height: 100%; }
 
   .link { stroke: var(--link); stroke-width: 1.5; fill: none; }
+  .link.faded { opacity: 0.06; }
+
   .link-label {
     font-family: 'DM Mono', monospace;
     font-size: 9px;
-    fill: var(--muted);
+    fill: #383838;
     pointer-events: none;
   }
 
-  .node circle {
-    stroke-width: 2;
-    cursor: grab;
-    transition: filter 0.2s;
-  }
+  .link-label.faded { opacity: 0.06; }
+  .link-label.highlighted { fill: #666; }
 
-  .node circle:active { cursor: grabbing; }
-  .node.artist circle { fill: var(--node-artist); stroke: #ff6b78; }
-  .node.band   circle { fill: var(--node-band);   stroke: #f0ff80; }
-  .node.artist circle:hover { filter: drop-shadow(0 0 10px var(--node-artist)); }
-  .node.band   circle:hover { filter: drop-shadow(0 0 10px var(--node-band)); }
+  .node { cursor: pointer; }
+  .node.faded { opacity: 0.1; }
 
   .node text {
     font-family: 'DM Mono', monospace;
@@ -193,22 +124,43 @@
 
   /* SIDEBAR */
   .sidebar {
-    width: 272px;
+    width: 260px;
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     background: var(--surface);
     flex-shrink: 0;
-    overflow-y: auto;
   }
 
-  .sidebar-section {
+  .search-wrap {
+    padding: 10px 12px;
     border-bottom: 1px solid var(--border);
-    padding: 12px;
     flex-shrink: 0;
   }
 
-  .sidebar-section h2 {
+  #searchInput {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    padding: 5px 8px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #searchInput:focus { border-color: #e8ff47; }
+  #searchInput::placeholder { color: var(--muted); }
+
+  .sidebar-inner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+  }
+
+  .sidebar-inner h2 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 0.9rem;
     letter-spacing: 0.1em;
@@ -216,154 +168,14 @@
     margin-bottom: 10px;
   }
 
-  .form-row { margin-bottom: 7px; }
+  .empty-msg { font-size: 0.62rem; color: var(--muted); line-height: 1.7; }
 
-  label {
-    display: block;
-    font-size: 0.58rem;
-    color: var(--muted);
-    margin-bottom: 3px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    padding: 5px 7px;
-    border-radius: 2px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  select option { background: var(--bg); }
-  textarea { resize: vertical; min-height: 44px; }
-
-  .btn {
-    width: 100%;
-    padding: 7px;
+  .info-name {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.95rem;
-    letter-spacing: 0.1em;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-  }
-
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:hover { opacity: 0.88; }
-
-  .btn-danger {
-    background: transparent;
-    border: 1px solid var(--accent2);
-    color: var(--accent2);
-    font-size: 0.68rem;
-    padding: 4px;
-    margin-top: 5px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0;
-  }
-
-  .btn-danger:hover { background: var(--accent2); color: #fff; }
-
-  /* TABS */
-  .tabs { display: flex; border-bottom: 1px solid var(--border); }
-
-  .tab {
-    flex: 1;
-    padding: 6px 4px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-align: center;
-    cursor: pointer;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.15s, border-color 0.15s;
-    background: none;
-    border-top: none; border-left: none; border-right: none;
-  }
-
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-  .tab-panel { display: none; padding: 10px; }
-  .tab-panel.active { display: block; }
-
-  .io-textarea {
-    width: 100%;
-    height: 110px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    padding: 6px;
-    border-radius: 2px;
-    resize: vertical;
-    outline: none;
-    line-height: 1.5;
-  }
-
-  .io-textarea:focus { border-color: var(--accent); }
-
-  .io-hint {
-    font-size: 0.56rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 6px;
-  }
-
-  .btn-row { display: flex; gap: 5px; margin-top: 6px; }
-  .btn-row .btn { font-size: 0.72rem; padding: 5px; letter-spacing: 0.05em; }
-
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* INFO PANEL */
-  .info-panel {
-    flex: 1;
-    padding: 12px;
-    overflow-y: auto;
-    min-height: 120px;
-  }
-
-  .info-panel h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  .info-empty { font-size: 0.62rem; color: var(--muted); line-height: 1.6; }
-
-  .info-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 10px;
-    margin-bottom: 6px;
-  }
-
-  .info-card .name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.05rem;
-    letter-spacing: 0.05em;
-    margin-bottom: 3px;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin-bottom: 5px;
   }
 
   .type-badge {
@@ -371,125 +183,127 @@
     font-size: 0.52rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 2px 5px;
+    padding: 2px 6px;
     border-radius: 2px;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
+    color: #000;
   }
 
-  .type-badge.artist { background: var(--node-artist); color: #000; }
-  .type-badge.band   { background: var(--node-band);   color: #000; }
+  .rel-group-title {
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 10px 0 4px;
+  }
 
   .rel-item {
     font-size: 0.62rem;
     line-height: 1.5;
     color: var(--muted);
     border-left: 2px solid var(--border);
-    padding-left: 7px;
-    margin-top: 5px;
+    padding: 2px 0 2px 8px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
   }
 
+  .rel-item:hover { border-left-color: #777; color: var(--text); }
   .rel-item .rel-target { color: var(--text); }
   .rel-item .rel-note { color: #444; font-style: italic; font-size: 0.58rem; }
 
   /* GRAPH CONTROLS */
   .graph-controls {
     position: absolute;
-    bottom: 12px;
-    left: 12px;
-    display: flex;
-    gap: 5px;
+    bottom: 14px; left: 14px;
+    display: flex; gap: 5px;
   }
 
   .ctrl-btn {
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.85rem;
-    width: 27px;
-    height: 27px;
+    width: 28px; height: 28px;
     border-radius: 2px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
     transition: color 0.15s, border-color 0.15s;
   }
 
-  .ctrl-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .ctrl-btn:hover { color: #e8ff47; border-color: #e8ff47; }
 
   .hint {
     position: absolute;
-    bottom: 12px;
-    right: 12px;
+    bottom: 14px; right: 14px;
     font-size: 0.52rem;
-    color: var(--muted);
+    color: #282828;
     text-align: right;
-    line-height: 1.7;
+    line-height: 1.8;
     pointer-events: none;
   }
 
-  code {
+  /* LOADING */
+  #loadingOverlay {
+    position: absolute; inset: 0;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+    z-index: 10;
+    transition: opacity 0.4s;
+  }
+
+  #loadingOverlay.hidden { opacity: 0; pointer-events: none; }
+
+  .spinner {
+    width: 28px; height: 28px;
+    border: 2px solid var(--border);
+    border-top-color: #e8ff47;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 0.62rem; color: var(--muted); }
+
+  #errorMsg {
+    display: none;
+    position: absolute; inset: 0;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 10px;
+    font-size: 0.68rem; color: #ff4757;
+    text-align: center; padding: 40px;
+  }
+
+  #errorMsg.show { display: flex; }
+  #errorMsg code {
     background: #1a1a1a;
-    padding: 1px 4px;
-    border-radius: 2px;
-    font-size: 0.9em;
+    padding: 8px 12px;
+    border-radius: 3px;
+    color: var(--muted);
+    font-size: 0.62rem;
+    word-break: break-all;
   }
 </style>
 </head>
 <body>
 
-<!-- GITHUB CONFIG MODAL -->
-<div class="modal-backdrop" id="ghModal">
-  <div class="modal">
-    <h2>GitHub Settings</h2>
-    <p>
-      The app loads and saves <code>relationships.csv</code> directly to your GitHub repo.
-      You need a <strong>Personal Access Token</strong> with <code>repo</code> (or <code>public_repo</code>) scope.
-      <br><br>
-      <a href="https://github.com/settings/tokens/new?description=MusicGraph&scopes=public_repo" target="_blank">
-        → Generate a token on GitHub ↗
-      </a>
-    </p>
-    <div class="form-row">
-      <label>GitHub username</label>
-      <input id="ghOwner" placeholder="e.g. janedoe">
-    </div>
-    <div class="form-row">
-      <label>Repository name</label>
-      <input id="ghRepo" placeholder="e.g. music-graph">
-    </div>
-    <div class="form-row">
-      <label>Branch (default: main)</label>
-      <input id="ghBranch" placeholder="main">
-    </div>
-    <div class="form-row">
-      <label>Personal Access Token</label>
-      <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-    </div>
-    <p style="margin-top:8px">Settings are saved in your browser's localStorage — the token never leaves your machine.</p>
-    <div class="modal-btns">
-      <button class="btn btn-primary" onclick="saveGhSettings()">SAVE &amp; CONNECT</button>
-      <button class="btn btn-secondary" onclick="closeModal()">CANCEL</button>
-    </div>
-  </div>
-</div>
-
 <header>
   <h1>Music Graph</h1>
-  <div class="legend">
-    <span><span class="dot artist"></span> Artist</span>
-    <span><span class="dot band"></span> Band</span>
-  </div>
-  <div id="gh-status">
-    <span class="pill" id="ghPill">not connected</span>
-    <button class="hdr-btn" onclick="openModal()">⚙ GitHub</button>
-    <button class="hdr-btn save" id="saveBtn" onclick="ghSave()" style="display:none">↑ Save to GitHub</button>
+  <div id="legend"></div>
+  <div id="status">
+    <span id="statusText"></span>
+    <button class="reload-btn" onclick="loadData()">↺ reload</button>
   </div>
 </header>
 
 <div class="main">
   <div id="graph">
+    <div id="loadingOverlay">
+      <div class="spinner"></div>
+      <div class="loading-text">loading relationships…</div>
+    </div>
+    <div id="errorMsg"></div>
     <svg id="svg"></svg>
     <div class="graph-controls">
       <button class="ctrl-btn" id="zoomIn">+</button>
@@ -500,397 +314,61 @@
   </div>
 
   <div class="sidebar">
-
-    <!-- ADD RELATIONSHIP -->
-    <div class="sidebar-section">
-      <h2>Add Relationship</h2>
-      <div class="form-row">
-        <label>From</label>
-        <input id="fromNode" placeholder="e.g. Dean Wareham" list="node-suggestions" autocomplete="off">
-        <datalist id="node-suggestions"></datalist>
-      </div>
-      <div class="form-row">
-        <label>From type</label>
-        <select id="fromType">
-          <option value="artist">Artist / Person</option>
-          <option value="band">Band / Group</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>Relationship</label>
-        <input id="relLabel" placeholder="e.g. was a member of" list="rel-suggestions" autocomplete="off">
-        <datalist id="rel-suggestions">
-          <option value="was a member of">
-          <option value="founded">
-          <option value="produced">
-          <option value="collaborated with">
-          <option value="toured with">
-          <option value="influenced">
-          <option value="split from">
-          <option value="is a solo project of">
-          <option value="played on album by">
-        </datalist>
-      </div>
-      <div class="form-row">
-        <label>To</label>
-        <input id="toNode" placeholder="e.g. Galaxie 500" list="node-suggestions" autocomplete="off">
-      </div>
-      <div class="form-row">
-        <label>To type</label>
-        <select id="toType">
-          <option value="band">Band / Group</option>
-          <option value="artist">Artist / Person</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>Notes / dates (optional)</label>
-        <textarea id="relNote" placeholder="e.g. 1987–1991, founding member"></textarea>
-      </div>
-      <button class="btn btn-primary" id="addBtn">ADD RELATIONSHIP</button>
+    <div class="search-wrap">
+      <input id="searchInput" placeholder="search nodes…" autocomplete="off">
     </div>
-
-    <!-- IMPORT / EXPORT -->
-    <div class="sidebar-section" style="padding:0">
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('csv')">CSV</button>
-        <button class="tab" onclick="switchTab('json')">JSON</button>
-      </div>
-
-      <div id="tab-csv" class="tab-panel active">
-        <p class="io-hint">One row per relationship:<br>
-          <code>from,from_type,relationship,to,to_type,notes</code>
-        </p>
-        <textarea class="io-textarea" id="csvArea" spellcheck="false"
-          placeholder="Dean Wareham,artist,was a member of,Galaxie 500,band,1987-1991"></textarea>
-        <div class="btn-row">
-          <button class="btn btn-primary" style="flex:1" onclick="importCSV()">IMPORT</button>
-          <button class="btn btn-secondary" style="flex:1" onclick="exportCSV()">EXPORT</button>
-        </div>
-      </div>
-
-      <div id="tab-json" class="tab-panel">
-        <p class="io-hint">Array of objects with keys:<br>
-          <code>from, fromType, rel, to, toType, note</code>
-        </p>
-        <textarea class="io-textarea" id="jsonArea" spellcheck="false"></textarea>
-        <div class="btn-row">
-          <button class="btn btn-primary" style="flex:1" onclick="importJSON()">IMPORT</button>
-          <button class="btn btn-secondary" style="flex:1" onclick="exportJSON()">EXPORT</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- INSPECTOR -->
-    <div class="info-panel">
+    <div class="sidebar-inner">
       <h2>Inspector</h2>
       <div id="infoContent">
-        <p class="info-empty">Click a node to inspect its connections.<br><br>
-          Connect to GitHub via ⚙ to load and save your data automatically.</p>
+        <p class="empty-msg">Click any node to inspect its connections.</p>
       </div>
     </div>
-
-  </div><!-- /sidebar -->
-</div><!-- /main -->
+  </div>
+</div>
 
 <script>
-// ── GITHUB SETTINGS ───────────────────────────────────────────────────────────
-const GH_SETTINGS_KEY = 'musicgraph_gh';
-let ghSettings = null;
-let ghFileSha = null; // needed for updates
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONFIGURATION
+// When hosted on GitHub Pages, a relative path works automatically.
+// Locally (file://) you may need a simple server: python3 -m http.server
+// ═══════════════════════════════════════════════════════════════════════════════
+const CSV_URL = 'relationships.csv';
 
-function loadGhSettings() {
-  try {
-    const raw = localStorage.getItem(GH_SETTINGS_KEY);
-    if (raw) ghSettings = JSON.parse(raw);
-  } catch(e) {}
-}
-
-function saveGhSettings() {
-  const owner  = document.getElementById('ghOwner').value.trim();
-  const repo   = document.getElementById('ghRepo').value.trim();
-  const branch = document.getElementById('ghBranch').value.trim() || 'main';
-  const token  = document.getElementById('ghToken').value.trim();
-  if (!owner || !repo || !token) { alert('Please fill in username, repo, and token.'); return; }
-  ghSettings = { owner, repo, branch, token };
-  localStorage.setItem(GH_SETTINGS_KEY, JSON.stringify(ghSettings));
-  closeModal();
-  ghLoad();
-}
-
-function openModal() {
-  if (ghSettings) {
-    document.getElementById('ghOwner').value  = ghSettings.owner;
-    document.getElementById('ghRepo').value   = ghSettings.repo;
-    document.getElementById('ghBranch').value = ghSettings.branch;
-    document.getElementById('ghToken').value  = ghSettings.token;
-  }
-  document.getElementById('ghModal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('ghModal').classList.remove('open');
-}
-
-// Close modal on backdrop click
-document.getElementById('ghModal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeModal();
-});
-
-function setGhStatus(state, msg) {
-  const pill = document.getElementById('ghPill');
-  pill.className = 'pill ' + state;
-  pill.textContent = msg;
-  document.getElementById('saveBtn').style.display = state === 'ok' ? 'inline-block' : 'none';
-}
-
-// ── GITHUB API ────────────────────────────────────────────────────────────────
-const DATA_FILE = 'relationships.csv';
-
-async function ghLoad() {
-  if (!ghSettings) return;
-  setGhStatus('busy', 'loading…');
-  const { owner, repo, branch, token } = ghSettings;
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${DATA_FILE}?ref=${branch}`;
-  try {
-    const res = await fetch(url, { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } });
-    if (res.status === 404) {
-      // File doesn't exist yet — start fresh
-      ghFileSha = null;
-      setGhStatus('ok', 'connected (new file)');
-      return;
-    }
-    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-    const data = await res.json();
-    ghFileSha = data.sha;
-    const csv = atob(data.content.replace(/\n/g, ''));
-    document.getElementById('csvArea').value = csv;
-    importCSV(true); // silent import (no alert on empty)
-    setGhStatus('ok', `loaded · ${state.links.length} relationships`);
-  } catch(e) {
-    setGhStatus('err', 'error: ' + e.message);
-  }
-}
-
-async function ghSave() {
-  if (!ghSettings) { openModal(); return; }
-  setGhStatus('busy', 'saving…');
-  const { owner, repo, branch, token } = ghSettings;
-  const csv = toCSVString();
-  const content = btoa(unescape(encodeURIComponent(csv)));
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${DATA_FILE}`;
-  const body = {
-    message: `Update relationships.csv — ${new Date().toISOString().slice(0,10)}`,
-    content,
-    branch,
-  };
-  if (ghFileSha) body.sha = ghFileSha;
-  try {
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || res.status);
-    }
-    const data = await res.json();
-    ghFileSha = data.content.sha;
-    setGhStatus('ok', `saved · ${new Date().toLocaleTimeString()}`);
-  } catch(e) {
-    setGhStatus('err', 'save failed: ' + e.message);
-  }
-}
-
-// ── DATA STATE ────────────────────────────────────────────────────────────────
-const state = { nodes: [], links: [], nextId: 1 };
-
-function getOrCreateNode(name, type) {
-  let node = state.nodes.find(n => n.name.toLowerCase() === name.toLowerCase());
-  if (!node) {
-    node = { id: state.nextId++, name, type };
-    state.nodes.push(node);
-  }
-  return node;
-}
-
-function addRelationship(fromName, fromType, label, toName, toType, note) {
-  const source = getOrCreateNode(fromName.trim(), fromType);
-  const target = getOrCreateNode(toName.trim(), toType);
-  state.links.push({ source: source.id, target: target.id, label, note: note || '' });
-  updateGraph();
-  updateSuggestions();
-}
-
-// ── D3 GRAPH ──────────────────────────────────────────────────────────────────
-const svg = d3.select('#svg');
-let width = 0, height = 0;
-const g = svg.append('g');
-const zoom = d3.zoom().scaleExtent([0.2, 4]).on('zoom', e => g.attr('transform', e.transform));
-svg.call(zoom);
-
-let simulation;
-
-function initSimulation() {
-  simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.id).distance(130).strength(0.6))
-    .force('charge', d3.forceManyBody().strength(-320))
-    .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide(40));
-}
-
-function updateGraph() {
-  const el = document.getElementById('graph');
-  width = el.clientWidth;
-  height = el.clientHeight;
-  if (!simulation) initSimulation();
-
-  const nodeMap = new Map(state.nodes.map(n => [n.id, n]));
-  const links = state.links.map(l => ({
-    ...l,
-    source: typeof l.source === 'object' ? l.source : nodeMap.get(l.source),
-    target: typeof l.target === 'object' ? l.target : nodeMap.get(l.target),
-  })).filter(l => l.source && l.target);
-
-  const linkGroup = g.selectAll('.link-group').data(links, (_, i) => i);
-  linkGroup.exit().remove();
-  const linkEnter = linkGroup.enter().append('g').attr('class', 'link-group');
-  linkEnter.append('line').attr('class', 'link');
-  linkEnter.append('text').attr('class', 'link-label');
-
-  const node = g.selectAll('.node').data(state.nodes, d => d.id);
-  node.exit().remove();
-
-  const nodeEnter = node.enter().append('g')
-    .attr('class', d => `node ${d.type}`)
-    .call(d3.drag()
-      .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
-      .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
-      .on('end',   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
-    )
-    .on('click', (e, d) => showInfo(d, links));
-
-  nodeEnter.append('circle').attr('r', d => d.type === 'band' ? 14 : 10);
-  nodeEnter.append('text').attr('dy', d => d.type === 'band' ? 26 : 22).text(d => d.name);
-
-  simulation.nodes(state.nodes).on('tick', ticked);
-  simulation.force('link').links(links);
-  simulation.alpha(0.5).restart();
-}
-
-function ticked() {
-  g.selectAll('.link-group').each(function(d) {
-    const grp = d3.select(this);
-    grp.select('line')
-      .attr('x1', d.source.x).attr('y1', d.source.y)
-      .attr('x2', d.target.x).attr('y2', d.target.y);
-    grp.select('text')
-      .attr('x', (d.source.x + d.target.x) / 2)
-      .attr('y', (d.source.y + d.target.y) / 2 - 4)
-      .text(d.label + (d.note ? ` [${d.note}]` : ''));
-  });
-  g.selectAll('.node').attr('transform', d => `translate(${d.x},${d.y})`);
-}
-
-// ── INSPECTOR ─────────────────────────────────────────────────────────────────
-function showInfo(node, links) {
-  const rels = links.filter(l =>
-    (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
-  );
-  document.getElementById('infoContent').innerHTML = `
-    <div class="info-card">
-      <div class="name">${node.name}</div>
-      <span class="type-badge ${node.type}">${node.type}</span>
-      ${rels.length === 0 ? '<p style="font-size:0.62rem;color:var(--muted)">No connections yet.</p>' : ''}
-      ${rels.map(l => {
-        const isSource = (l.source.id || l.source) === node.id;
-        const other = isSource ? l.target : l.source;
-        return `<div class="rel-item">
-          <span>${isSource ? '→' : '←'} ${l.label} <span class="rel-target">${other.name}</span></span>
-          ${l.note ? `<div class="rel-note">${l.note}</div>` : ''}
-        </div>`;
-      }).join('')}
-    </div>
-    <button class="btn btn-danger" onclick="removeNode(${node.id})">Remove node + connections</button>
-  `;
-}
-
-window.removeNode = function(id) {
-  state.nodes = state.nodes.filter(n => n.id !== id);
-  state.links = state.links.filter(l => {
-    const s = typeof l.source === 'object' ? l.source.id : l.source;
-    const t = typeof l.target === 'object' ? l.target.id : l.target;
-    return s !== id && t !== id;
-  });
-  g.selectAll('.link-group').remove();
-  g.selectAll('.node').remove();
-  simulation = null;
-  document.getElementById('infoContent').innerHTML = '<p class="info-empty">Node removed.</p>';
-  updateGraph();
-  updateSuggestions();
+// ═══════════════════════════════════════════════════════════════════════════════
+// NODE TYPE REGISTRY
+// Define known types here. Any type in the CSV not listed here is auto-registered
+// with a colour from AUTO_COLORS. Add new types freely — the legend updates itself.
+//
+// Shapes: 'circle' | 'diamond' | 'square' | 'triangle' | 'hexagon'
+// ═══════════════════════════════════════════════════════════════════════════════
+const NODE_TYPES = {
+  person:   { color: '#ff4757', shape: 'circle',   size: 10, label: 'Person'        },
+  band:     { color: '#e8ff47', shape: 'circle',   size: 14, label: 'Band / Group'  },
+  album:    { color: '#c77dff', shape: 'diamond',  size: 11, label: 'Album'         },
+  label:    { color: '#47c8ff', shape: 'square',   size: 11, label: 'Record Label'  },
+  producer: { color: '#ff9f43', shape: 'triangle', size: 10, label: 'Producer'      },
+  engineer: { color: '#2ed573', shape: 'triangle', size: 10, label: 'Engineer'      },
 };
 
-// ── SUGGESTIONS ───────────────────────────────────────────────────────────────
-function updateSuggestions() {
-  document.getElementById('node-suggestions').innerHTML =
-    state.nodes.map(n => `<option value="${n.name}">`).join('');
+const AUTO_COLORS = ['#fd79a8','#fdcb6e','#6c5ce7','#00b894','#e17055','#74b9ff'];
+let autoColorIdx = 0;
+
+function getNodeType(typeName) {
+  const key = (typeName || 'person').toLowerCase().trim();
+  if (!NODE_TYPES[key]) {
+    NODE_TYPES[key] = {
+      color: AUTO_COLORS[autoColorIdx++ % AUTO_COLORS.length],
+      shape: 'circle',
+      size: 10,
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+    };
+  }
+  return NODE_TYPES[key];
 }
 
-// ── ADD BUTTON ────────────────────────────────────────────────────────────────
-document.getElementById('addBtn').addEventListener('click', () => {
-  const from     = document.getElementById('fromNode').value.trim();
-  const fromType = document.getElementById('fromType').value;
-  const label    = document.getElementById('relLabel').value.trim() || 'related to';
-  const to       = document.getElementById('toNode').value.trim();
-  const toType   = document.getElementById('toType').value;
-  const note     = document.getElementById('relNote').value.trim();
-  if (!from || !to) { alert('Please fill in both From and To fields.'); return; }
-  addRelationship(from, fromType, label, to, toType, note);
-  document.getElementById('fromNode').value = '';
-  document.getElementById('relLabel').value = '';
-  document.getElementById('toNode').value = '';
-  document.getElementById('relNote').value = '';
-});
-
-// ── IMPORT / EXPORT ───────────────────────────────────────────────────────────
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
-  document.getElementById(`tab-${tab}`).classList.add('active');
-}
-
-function toRows() {
-  const nodeMap = new Map(state.nodes.map(n => [n.id, n]));
-  return state.links.map(l => {
-    const sid = typeof l.source === 'object' ? l.source.id : l.source;
-    const tid = typeof l.target === 'object' ? l.target.id : l.target;
-    const src = nodeMap.get(sid), tgt = nodeMap.get(tid);
-    return { from: src.name, fromType: src.type, rel: l.label, to: tgt.name, toType: tgt.type, note: l.note || '' };
-  });
-}
-
-function toCSVString() {
-  const csvEscape = s => /[,"\n]/.test(String(s)) ? `"${String(s).replace(/"/g, '""')}"` : s;
-  const rows = toRows().map(r =>
-    [r.from, r.fromType, r.rel, r.to, r.toType, r.note].map(csvEscape).join(',')
-  );
-  return ['from,from_type,relationship,to,to_type,notes', ...rows].join('\n');
-}
-
-function loadRows(rows) {
-  state.nodes = []; state.links = []; state.nextId = 1;
-  g.selectAll('.link-group').remove();
-  g.selectAll('.node').remove();
-  simulation = null;
-  rows.forEach(r => addRelationship(r.from, r.fromType, r.rel, r.to, r.toType, r.note));
-  updateSuggestions();
-}
-
+// ═══════════════════════════════════════════════════════════════════════════════
+// CSV PARSING
+// ═══════════════════════════════════════════════════════════════════════════════
 function parseCSVLine(line) {
   const result = []; let cur = '', inQuote = false;
   for (let i = 0; i < line.length; i++) {
@@ -903,101 +381,389 @@ function parseCSVLine(line) {
   return result;
 }
 
-function importCSV(silent = false) {
-  const raw = document.getElementById('csvArea').value.trim();
-  if (!raw) return;
-  const lines = raw.split('\n').filter(Boolean);
+function parseCSV(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const start = lines[0].toLowerCase().startsWith('from') ? 1 : 0;
-  const rows = lines.slice(start).map(line => {
+  return lines.slice(start).map(line => {
     const c = parseCSVLine(line);
-    return { from: c[0], fromType: c[1] || 'artist', rel: c[2] || 'related to', to: c[3], toType: c[4] || 'band', note: c[5] || '' };
+    return { from: c[0]||'', fromType: c[1]||'person', rel: c[2]||'related to', to: c[3]||'', toType: c[4]||'person', note: c[5]||'' };
   }).filter(r => r.from && r.to);
-  if (!rows.length) { if (!silent) alert('No valid rows found.'); return; }
-  loadRows(rows);
 }
 
-function exportCSV() {
-  const csv = toCSVString();
-  document.getElementById('csvArea').value = csv;
-  downloadFile('relationships.csv', csv, 'text/csv');
+// ═══════════════════════════════════════════════════════════════════════════════
+// GRAPH STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let graphNodes = [];
+let graphLinks = [];
+let activeFilter = null;
+let selectedNode = null;
+
+function buildGraph(rows) {
+  const nodeMap = new Map(); let nextId = 1;
+  function getNode(name, type) {
+    const key = name.toLowerCase();
+    if (!nodeMap.has(key)) nodeMap.set(key, { id: nextId++, name, type: type.toLowerCase().trim() });
+    return nodeMap.get(key);
+  }
+  const links = rows.map(r => {
+    const source = getNode(r.from, r.fromType);
+    const target = getNode(r.to,   r.toType);
+    return { source: source.id, target: target.id, label: r.rel, note: r.note };
+  });
+  return { nodes: [...nodeMap.values()], links };
 }
 
-function importJSON() {
-  const raw = document.getElementById('jsonArea').value.trim();
-  if (!raw) return;
-  let rows;
-  try { rows = JSON.parse(raw); } catch(e) { alert('Invalid JSON: ' + e.message); return; }
-  if (!Array.isArray(rows)) { alert('Expected a JSON array.'); return; }
-  rows = rows.map(r => ({
-    from: r.from || '', fromType: r.fromType || r.from_type || 'artist',
-    rel: r.rel || r.relationship || 'related to',
-    to: r.to || '', toType: r.toType || r.to_type || 'band',
-    note: r.note || r.notes || ''
-  })).filter(r => r.from && r.to);
-  if (!rows.length) { alert('No valid entries found.'); return; }
-  loadRows(rows);
-}
+// ═══════════════════════════════════════════════════════════════════════════════
+// D3 GRAPH
+// ═══════════════════════════════════════════════════════════════════════════════
+const svg   = d3.select('#svg');
+const gRoot = svg.append('g');
 
-function exportJSON() {
-  const json = JSON.stringify(toRows(), null, 2);
-  document.getElementById('jsonArea').value = json;
-  downloadFile('relationships.json', json, 'application/json');
-}
+// Arrowhead marker
+svg.append('defs').append('marker')
+  .attr('id', 'arrow').attr('viewBox', '0 -4 8 8')
+  .attr('refX', 22).attr('refY', 0)
+  .attr('markerWidth', 5).attr('markerHeight', 5)
+  .attr('orient', 'auto')
+  .append('path').attr('d', 'M0,-4L8,0L0,4').attr('fill', '#3a3a3a');
 
-function downloadFile(filename, content, type) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content], { type }));
-  a.download = filename; a.click();
-  URL.revokeObjectURL(a.href);
-}
+const zoom = d3.zoom().scaleExtent([0.15, 5])
+  .on('zoom', e => gRoot.attr('transform', e.transform));
+svg.call(zoom).on('dblclick.zoom', null);
 
-// File open
-const fileInput = document.createElement('input');
-fileInput.type = 'file'; fileInput.accept = '.csv,.json'; fileInput.style.display = 'none';
-document.body.appendChild(fileInput);
-fileInput.addEventListener('change', () => {
-  const file = fileInput.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    if (file.name.endsWith('.json')) { document.getElementById('jsonArea').value = e.target.result; switchTab('json'); }
-    else { document.getElementById('csvArea').value = e.target.result; switchTab('csv'); }
-  };
-  reader.readAsText(file); fileInput.value = '';
-});
+let width = 0, height = 0, simulation = null;
 
-// ── ZOOM CONTROLS ─────────────────────────────────────────────────────────────
-document.getElementById('zoomIn').onclick    = () => svg.transition().call(zoom.scaleBy, 1.4);
-document.getElementById('zoomOut').onclick   = () => svg.transition().call(zoom.scaleBy, 0.7);
-document.getElementById('zoomReset').onclick = () => svg.transition().call(zoom.transform,
-  d3.zoomIdentity.translate(width / 2, height / 2).scale(0.85).translate(-width / 2, -height / 2));
-
-window.addEventListener('resize', () => {
+function getSize() {
   const el = document.getElementById('graph');
   width = el.clientWidth; height = el.clientHeight;
-  if (simulation) simulation.force('center', d3.forceCenter(width / 2, height / 2)).alpha(0.1).restart();
+}
+
+// SVG path strings for non-circle shapes
+function shapePath(type, size) {
+  const s = size;
+  switch(type) {
+    case 'diamond':  return `M0,${-s*1.4} L${s},0 L0,${s*1.4} L${-s},0 Z`;
+    case 'square':   return `M${-s},${-s} L${s},${-s} L${s},${s} L${-s},${s} Z`;
+    case 'triangle': return `M0,${-s*1.3} L${s*1.1},${s*0.9} L${-s*1.1},${s*0.9} Z`;
+    case 'hexagon': {
+      const pts = d3.range(6).map(i => { const a = (Math.PI/3)*i - Math.PI/6; return [s*Math.cos(a), s*Math.sin(a)]; });
+      return 'M' + pts.map(p => p.join(',')).join('L') + 'Z';
+    }
+    default: return null;
+  }
+}
+
+function lighten(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, ((n>>16)&0xff)+50);
+  const gg = Math.min(255, ((n>>8)&0xff)+50);
+  const b = Math.min(255, (n&0xff)+50);
+  return `rgb(${r},${gg},${b})`;
+}
+
+function renderGraph() {
+  getSize();
+  gRoot.selectAll('*').remove();
+
+  simulation = d3.forceSimulation()
+    .force('link',      d3.forceLink().id(d => d.id).distance(150).strength(0.5))
+    .force('charge',    d3.forceManyBody().strength(-380))
+    .force('center',    d3.forceCenter(width/2, height/2))
+    .force('collision', d3.forceCollide(d => getNodeType(d.type).size + 24));
+
+  const nodeMap = new Map(graphNodes.map(n => [n.id, n]));
+  const links = graphLinks.map(l => ({
+    ...l,
+    source: typeof l.source === 'object' ? l.source : nodeMap.get(l.source),
+    target: typeof l.target === 'object' ? l.target : nodeMap.get(l.target),
+  })).filter(l => l.source && l.target);
+
+  // EDGES
+  const linkG = gRoot.append('g');
+  const linkGroups = linkG.selectAll('g').data(links).enter().append('g');
+  linkGroups.append('line').attr('class', 'link').attr('marker-end', 'url(#arrow)');
+  linkGroups.append('text').attr('class', 'link-label')
+    .text(d => d.label + (d.note ? ` [${d.note}]` : ''));
+
+  // NODES
+  const nodeG = gRoot.append('g');
+  const nodeGroups = nodeG.selectAll('g').data(graphNodes).enter().append('g')
+    .attr('class', 'node')
+    .call(d3.drag()
+      .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end',   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+    )
+    .on('click', (e, d) => { e.stopPropagation(); selectNode(d, links); });
+
+  nodeGroups.each(function(d) {
+    const nt = getNodeType(d.type);
+    const el = d3.select(this);
+    const path = shapePath(nt.shape, nt.size);
+    if (path) {
+      el.append('path').attr('d', path)
+        .attr('fill', nt.color).attr('stroke', lighten(nt.color)).attr('stroke-width', 2);
+    } else {
+      el.append('circle').attr('r', nt.size)
+        .attr('fill', nt.color).attr('stroke', lighten(nt.color)).attr('stroke-width', 2);
+    }
+    el.append('text').attr('dy', nt.size + 14).text(d.name);
+  });
+
+  simulation.nodes(graphNodes).on('tick', () => {
+    linkGroups.select('line')
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    linkGroups.select('text')
+      .attr('x', d => (d.source.x + d.target.x) / 2)
+      .attr('y', d => (d.source.y + d.target.y) / 2 - 4);
+    nodeGroups.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  simulation.force('link').links(links);
+  simulation.alpha(0.8).restart();
+
+  svg.on('click', () => clearSelection());
+  applyFilters();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FILTERING & SELECTION
+// ═══════════════════════════════════════════════════════════════════════════════
+function applyFilters() {
+  const allNodes  = gRoot.selectAll('.node');
+  const allLinkGs = gRoot.selectAll('g g'); // link groups
+
+  if (!activeFilter && !selectedNode) {
+    allNodes.classed('faded', false);
+    gRoot.selectAll('line').classed('faded', false);
+    gRoot.selectAll('.link-label').classed('faded', false).classed('highlighted', false);
+    return;
+  }
+
+  if (activeFilter && !selectedNode) {
+    allNodes.classed('faded', d => d.type !== activeFilter);
+    gRoot.selectAll('line').classed('faded', d => {
+      if (!d) return false;
+      const st = typeof d.source === 'object' ? d.source.type : '';
+      const tt = typeof d.target === 'object' ? d.target.type : '';
+      return st !== activeFilter && tt !== activeFilter;
+    });
+    return;
+  }
+
+  if (selectedNode) {
+    const connectedIds = new Set([selectedNode.id]);
+    gRoot.selectAll('line').each(d => {
+      if (!d) return;
+      const sid = typeof d.source === 'object' ? d.source.id : d.source;
+      const tid = typeof d.target === 'object' ? d.target.id : d.target;
+      if (sid === selectedNode.id || tid === selectedNode.id) { connectedIds.add(sid); connectedIds.add(tid); }
+    });
+    allNodes.classed('faded', d => !connectedIds.has(d.id));
+    gRoot.selectAll('line').classed('faded', d => {
+      if (!d) return false;
+      const sid = typeof d.source === 'object' ? d.source.id : d.source;
+      const tid = typeof d.target === 'object' ? d.target.id : d.target;
+      return sid !== selectedNode.id && tid !== selectedNode.id;
+    });
+    gRoot.selectAll('.link-label')
+      .classed('highlighted', d => {
+        if (!d) return false;
+        const sid = typeof d.source === 'object' ? d.source.id : d.source;
+        const tid = typeof d.target === 'object' ? d.target.id : d.target;
+        return sid === selectedNode.id || tid === selectedNode.id;
+      })
+      .classed('faded', d => {
+        if (!d) return false;
+        const sid = typeof d.source === 'object' ? d.source.id : d.source;
+        const tid = typeof d.target === 'object' ? d.target.id : d.target;
+        return sid !== selectedNode.id && tid !== selectedNode.id;
+      });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INSPECTOR
+// ═══════════════════════════════════════════════════════════════════════════════
+function selectNode(node, links) {
+  selectedNode = node;
+  applyFilters();
+
+  const nt = getNodeType(node.type);
+  const outgoing = links.filter(l => (typeof l.source === 'object' ? l.source.id : l.source) === node.id);
+  const incoming = links.filter(l => (typeof l.target === 'object' ? l.target.id : l.target) === node.id);
+
+  function relHTML(arr, dir) {
+    if (!arr.length) return '';
+    return `<div class="rel-group-title">${dir}</div>` + arr.map(l => {
+      const other     = dir === 'outgoing' ? l.target : l.source;
+      const otherId   = typeof other === 'object' ? other.id : other;
+      const otherNode = graphNodes.find(n => n.id === otherId);
+      return `<div class="rel-item" onclick="selectNodeById(${otherId})">
+        ${l.label} → <span class="rel-target">${otherNode ? otherNode.name : '?'}</span>
+        ${l.note ? `<div class="rel-note">${l.note}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('infoContent').innerHTML = `
+    <div class="info-name">${node.name}</div>
+    <span class="type-badge" style="background:${nt.color}">${nt.label}</span>
+    ${relHTML(outgoing, 'outgoing')}
+    ${relHTML(incoming, 'incoming')}
+    ${(!outgoing.length && !incoming.length) ? '<p class="empty-msg" style="margin-top:6px">No connections.</p>' : ''}
+  `;
+}
+
+window.selectNodeById = function(id) {
+  const node = graphNodes.find(n => n.id === id);
+  if (!node) return;
+  const nodeMap = new Map(graphNodes.map(n => [n.id, n]));
+  const links = graphLinks.map(l => ({
+    ...l,
+    source: typeof l.source === 'object' ? l.source : nodeMap.get(l.source),
+    target: typeof l.target === 'object' ? l.target : nodeMap.get(l.target),
+  }));
+  selectNode(node, links);
+  // Pan camera to node
+  if (node.x != null && node.y != null) {
+    const t = d3.zoomTransform(svg.node());
+    svg.transition().duration(400).call(zoom.transform,
+      d3.zoomIdentity.translate(width/2 - node.x * t.k, height/2 - node.y * t.k).scale(t.k)
+    );
+  }
+};
+
+function clearSelection() {
+  selectedNode = null;
+  applyFilters();
+  document.getElementById('infoContent').innerHTML =
+    '<p class="empty-msg">Click any node to inspect its connections.</p>';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════════════════════════════════════
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  if (!q) { clearSelection(); return; }
+  gRoot.selectAll('.node').classed('faded', d => !d.name.toLowerCase().includes(q));
+  gRoot.selectAll('line').classed('faded', true);
+  gRoot.selectAll('.link-label').classed('faded', true);
 });
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  loadGhSettings();
-  if (ghSettings) {
-    ghLoad();
-  } else {
-    // Seed data for first-time users
-    const seed = [
-      ["Dean Wareham", "artist", "was a member of", "Galaxie 500", "band", "1987–1991, co-founder"],
-      ["Naomi Yang",   "artist", "was a member of", "Galaxie 500", "band", "1987–1991"],
-      ["Damon Krukowski","artist","was a member of","Galaxie 500", "band", "1987–1991"],
-      ["Dean Wareham", "artist", "founded",         "Luna",        "band", "1991"],
-      ["Naomi Yang",   "artist", "founded",         "Damon & Naomi","band","1992"],
-      ["Damon Krukowski","artist","founded",         "Damon & Naomi","band","1992"],
-      ["Yo La Tengo",  "band",  "collaborated with","Damon & Naomi","band","various recordings"],
-      ["Dean Wareham", "artist", "is a solo project of","Dean & Britta","band","with Britta Phillips"],
-    ];
-    seed.forEach(([f, ft, l, t, tt, n]) => addRelationship(f, ft, l, t, tt, n));
-    updateSuggestions();
-  }
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  const q = this.value.toLowerCase().trim();
+  const match = graphNodes.find(n => n.name.toLowerCase().includes(q));
+  if (match) { this.value = ''; selectNodeById(match.id); }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// LEGEND — built dynamically from data
+// ═══════════════════════════════════════════════════════════════════════════════
+function buildLegend() {
+  const types = [...new Set(graphNodes.map(n => n.type))].sort();
+  const container = document.getElementById('legend');
+  container.innerHTML = '';
+
+  types.forEach(type => {
+    const nt = getNodeType(type);
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+
+    const sw = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    sw.setAttribute('width', '14'); sw.setAttribute('height', '14');
+    sw.classList.add('legend-swatch');
+    const path = shapePath(nt.shape, 6);
+    if (path) {
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d', path); p.setAttribute('transform', 'translate(7,7)');
+      p.setAttribute('fill', nt.color); sw.appendChild(p);
+    } else {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx','7'); c.setAttribute('cy','7'); c.setAttribute('r','6');
+      c.setAttribute('fill', nt.color); sw.appendChild(c);
+    }
+    item.appendChild(sw);
+    item.appendChild(document.createTextNode(nt.label));
+
+    item.addEventListener('click', () => {
+      activeFilter = activeFilter === type ? null : type;
+      document.querySelectorAll('.legend-item').forEach((el, i) => {
+        el.classList.toggle('dimmed', activeFilter !== null && types[i] !== activeFilter);
+      });
+      selectedNode = null;
+      applyFilters();
+    });
+
+    container.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════════════════════════════════════════
+async function loadData() {
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+  document.getElementById('errorMsg').classList.remove('show');
+  document.getElementById('statusText').textContent = 'loading…';
+  selectedNode = null; activeFilter = null;
+
+  try {
+    const res = await fetch(CSV_URL + '?_=' + Date.now());
+    if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${CSV_URL}`);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if (!rows.length) throw new Error('CSV has no valid rows — check column headers and format.');
+
+    const built = buildGraph(rows);
+    graphNodes = built.nodes;
+    graphLinks = built.links;
+
+    renderGraph();
+    buildLegend();
+
+    document.getElementById('statusText').textContent =
+      `${graphNodes.length} nodes · ${graphLinks.length} edges`;
+    document.getElementById('loadingOverlay').classList.add('hidden');
+
+  } catch(err) {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    const el = document.getElementById('errorMsg');
+    el.innerHTML = `
+      <div>Could not load data</div>
+      <code>${err.message}</code>
+      <div style="font-size:0.58rem;color:var(--muted);margin-top:8px;line-height:1.7">
+        Make sure <code>relationships.csv</code> is in the same directory as <code>index.html</code>.<br>
+        If running locally, use a server: <code>python3 -m http.server</code>
+      </div>`;
+    el.classList.add('show');
+    document.getElementById('statusText').textContent = 'error';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ZOOM & RESIZE
+// ═══════════════════════════════════════════════════════════════════════════════
+document.getElementById('zoomIn').onclick    = () => svg.transition().call(zoom.scaleBy, 1.4);
+document.getElementById('zoomOut').onclick   = () => svg.transition().call(zoom.scaleBy, 0.7);
+document.getElementById('zoomReset').onclick = () => {
+  getSize();
+  svg.transition().call(zoom.transform,
+    d3.zoomIdentity.translate(width/2, height/2).scale(0.9).translate(-width/2, -height/2));
+};
+
+window.addEventListener('resize', () => {
+  getSize();
+  if (simulation) simulation.force('center', d3.forceCenter(width/2, height/2)).alpha(0.1).restart();
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', loadData);
 </script>
 </body>
 </html>

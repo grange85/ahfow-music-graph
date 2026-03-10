@@ -1,9 +1,17 @@
 from,from_type,relationship,to,to_type,notes
-Dean Wareham,artist,was a member of,Galaxie 500,band,1987–1991 co-founder
-Naomi Yang,artist,was a member of,Galaxie 500,band,1987–1991
-Damon Krukowski,artist,was a member of,Galaxie 500,band,1987–1991
-Dean Wareham,artist,founded,Luna,band,1991 after Galaxie 500 broke up
-Naomi Yang,artist,founded,Damon & Naomi,band,1992 with Damon Krukowski
-Damon Krukowski,artist,founded,Damon & Naomi,band,1992
+Dean Wareham,person,was a member of,Galaxie 500,band,1987–1991 co-founder
+Naomi Yang,person,was a member of,Galaxie 500,band,1987–1991
+Damon Krukowski,person,was a member of,Galaxie 500,band,1987–1991
+Dean Wareham,person,founded,Luna,band,1991
+Naomi Yang,person,founded,Damon & Naomi,band,1992
+Damon Krukowski,person,founded,Damon & Naomi,band,1992
+Dean Wareham,person,formed duo,Dean & Britta,band,with Britta Phillips
 Yo La Tengo,band,collaborated with,Damon & Naomi,band,various recordings
-Dean Wareham,artist,is a solo project of,Dean & Britta,band,with Britta Phillips
+Galaxie 500,band,released,Today,album,1988 debut
+Galaxie 500,band,released,On Fire,album,1989
+Galaxie 500,band,released,This Is Our Music,album,1990
+Rough Trade,label,released,Today,album,
+Rough Trade,label,released,On Fire,album,
+Rykodisc,label,released,This Is Our Music,album,
+Mark Kramer,producer,produced,Today,album,Galaxie 500 debut
+Mark Kramer,producer,produced,On Fire,album,

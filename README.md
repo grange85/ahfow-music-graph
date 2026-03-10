@@ -1,6 +1,6 @@
 # Music Relationship Graph
 
-An interactive graph for mapping relationships between musicians, bands, and artists. Data is stored as a CSV file in this repository and loaded/saved directly via the GitHub API.
+An interactive, read-only graph for exploring relationships between musicians, bands, albums, labels, and more. Hosted on GitHub Pages; data lives in `relationships.csv` — edit the CSV and push to update the graph.
 
 ## Live app
 
@@ -22,11 +22,11 @@ https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/
 
 ### 2. Upload the files
 
-Upload both files from this folder to the repo root:
+Upload both files to the repo root:
 - `index.html` — the app
 - `relationships.csv` — your data
 
-You can drag and drop them into the GitHub web UI, or use git:
+You can drag and drop them via the GitHub web UI, or use git:
 
 ```bash
 git init
@@ -44,63 +44,65 @@ git push -u origin main
 - Choose **main** branch, **/ (root)** folder
 - Click **Save**
 
-After a minute or two, your app will be live at the URL shown.
-
-### 4. Generate a Personal Access Token
-
-The app needs a token to read and write `relationships.csv` on your behalf.
-
-- Go to [github.com/settings/tokens/new](https://github.com/settings/tokens/new)
-- Give it a description like `MusicGraph`
-- Select the **`public_repo`** scope (or `repo` if your repo is private)
-- Click **Generate token** and copy it — you won't see it again
-
-> **Fine-grained tokens** also work: grant *Read and write* access to *Contents* for your specific repo.
-
-### 5. Connect the app
-
-- Open your app in the browser
-- Click **⚙ GitHub** in the top-right
-- Fill in your username, repo name, branch (`main`), and paste your token
-- Click **Save & Connect**
-
-The app will immediately load your `relationships.csv` and show a **↑ Save to GitHub** button. Every time you click save, it commits the updated CSV to your repo.
+After a minute or two, your app will be live at the URL shown. After that, every push to `main` automatically updates the live site within ~30 seconds.
 
 ---
 
-## Data format
+## Editing data
 
-`relationships.csv` is a plain CSV file you can also edit directly in GitHub or any spreadsheet app:
+All editing is done directly in `relationships.csv`. Open it in any text editor, Numbers, or Excel, make your changes, and push to GitHub.
+
+### CSV format
 
 ```
 from,from_type,relationship,to,to_type,notes
-Dean Wareham,artist,was a member of,Galaxie 500,band,1987–1991 co-founder
-Naomi Yang,artist,was a member of,Galaxie 500,band,1987–1991
-Dean Wareham,artist,founded,Luna,band,1991 after Galaxie 500 broke up
+Dean Wareham,person,was a member of,Galaxie 500,band,1987–1991
+Galaxie 500,band,released,On Fire,album,1989
+Rough Trade,label,released,On Fire,album,
+Mark Kramer,producer,produced,On Fire,album,
 ```
 
-**Columns:**
+| Column | Description |
+|---|---|
+| `from` | Name of the source node |
+| `from_type` | Type of the source node (see below) |
+| `relationship` | Label shown on the connecting edge |
+| `to` | Name of the target node |
+| `to_type` | Type of the target node |
+| `notes` | Optional extra info shown in brackets |
 
-| Column | Values | Notes |
-|---|---|---|
-| `from` | any name | Person or band |
-| `from_type` | `artist` or `band` | Controls node colour |
-| `relationship` | any text | Label shown on the edge |
-| `to` | any name | Person or band |
-| `to_type` | `artist` or `band` | Controls node colour |
-| `notes` | any text | Optional — shown in brackets on the edge and in the inspector |
+### Node types
 
----
+The following types have predefined colours and shapes. You can use any other word as a type — it will be auto-assigned a colour.
 
-## Tips
+| Type | Shape | Colour | Use for |
+|---|---|---|---|
+| `person` | circle (small) | red | Musicians, individuals |
+| `band` | circle (large) | yellow | Bands, groups, duos |
+| `album` | diamond | purple | Releases, EPs, singles |
+| `label` | square | blue | Record labels |
+| `producer` | triangle | orange | Producers |
+| `engineer` | triangle | green | Recording/mixing engineers |
 
-- **Bulk editing**: Export CSV from the app, edit in a text editor or Numbers/Excel, paste back and Import, then Save to GitHub.
-- **Direct GitHub edits**: Edit `relationships.csv` directly on GitHub, then reload the app and click ⚙ GitHub → Save & Connect to pull the latest version.
-- **Version history**: Every save creates a git commit, so you have a full history of changes you can roll back to from the GitHub Commits view.
-- **Token security**: Your token is stored in your browser's `localStorage` and is never sent anywhere except the GitHub API. It is **not** included in the repository.
+To add a new type (e.g. `venue`, `manager`, `festival`), just use it in the CSV — it will appear automatically with an auto-assigned colour.
 
----
+### Tips
 
-## Privacy note
+- **The same node can appear many times** as a source or target — it's always treated as the same node as long as the name matches exactly (case-insensitive).
+- **Commas in names**: wrap the value in double quotes, e.g. `"Crosby, Stills & Nash"`
+- **Reload button**: the app has a `↺ reload` button in the header — useful after pushing changes if you have the page open.
+- **Running locally**: open with a simple server (`python3 -m http.server` then visit `localhost:8000`) rather than opening `index.html` directly, as browsers block local file fetches.
 
-If your repo is **public**, anyone can read `relationships.csv` — but only someone with your token can modify it. If you want the data to be private, create a **private** repo and use a token with the full `repo` scope instead of `public_repo`.
+### Adding new node type styles
+
+To customise the colour or shape of a new type, edit the `NODE_TYPES` object near the top of `index.html`:
+
+```javascript
+const NODE_TYPES = {
+  venue:   { color: '#ff6b9d', shape: 'hexagon', size: 11, label: 'Venue' },
+  manager: { color: '#a8e6cf', shape: 'square',  size: 10, label: 'Manager' },
+  // ... existing types
+};
+```
+
+Available shapes: `circle`, `diamond`, `square`, `triangle`, `hexagon`
