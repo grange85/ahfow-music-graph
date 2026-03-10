@@ -329,17 +329,11 @@
 <script>
 // ═══════════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
-// When hosted on GitHub Pages, a relative path works automatically.
-// Locally (file://) you may need a simple server: python3 -m http.server
 // ═══════════════════════════════════════════════════════════════════════════════
 const CSV_URL = 'relationships.csv';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NODE TYPE REGISTRY
-// Define known types here. Any type in the CSV not listed here is auto-registered
-// with a colour from AUTO_COLORS. Add new types freely — the legend updates itself.
-// v1
-// Shapes: 'circle' | 'diamond' | 'square' | 'triangle' | 'hexagon'
 // ═══════════════════════════════════════════════════════════════════════════════
 const NODE_TYPES = {
   person:   { color: '#ff4757', shape: 'circle',   size: 10, label: 'Person'        },
@@ -461,6 +455,55 @@ function lighten(hex) {
   return `rgb(${r},${gg},${b})`;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ARC HELPERS — curved paths for parallel edges
+// ═══════════════════════════════════════════════════════════════════════════════
+function arcPath(d) {
+  const sx = d.source.x, sy = d.source.y;
+  const tx = d.target.x, ty = d.target.y;
+  const offset = d._arcOffset ?? 0;
+  if (offset === 0) return `M${sx},${sy}L${tx},${ty}`;
+  const mx = (sx + tx) / 2, my = (sy + ty) / 2;
+  const dx = tx - sx, dy = ty - sy;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const cpx = mx - (dy / len) * offset;
+  const cpy = my + (dx / len) * offset;
+  return `M${sx},${sy}Q${cpx},${cpy},${tx},${ty}`;
+}
+
+function arcMidpoint(d) {
+  const sx = d.source.x, sy = d.source.y;
+  const tx = d.target.x, ty = d.target.y;
+  const offset = d._arcOffset ?? 0;
+  const mx = (sx + tx) / 2, my = (sy + ty) / 2;
+  if (offset === 0) return { x: mx, y: my };
+  const dx = tx - sx, dy = ty - sy;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const cpx = mx - (dy / len) * offset;
+  const cpy = my + (dx / len) * offset;
+  return { x: (sx/4 + cpx/2 + tx/4), y: (sy/4 + cpy/2 + ty/4) };
+}
+
+function annotateArcs(links) {
+  const pairTotal = {};
+  links.forEach(l => {
+    const sid = l.source.id ?? l.source;
+    const tid = l.target.id ?? l.target;
+    const key = [Math.min(sid, tid), Math.max(sid, tid)].join('-');
+    pairTotal[key] = (pairTotal[key] ?? 0) + 1;
+  });
+  const pairSeen = {};
+  links.forEach(l => {
+    const sid = l.source.id ?? l.source;
+    const tid = l.target.id ?? l.target;
+    const key = [Math.min(sid, tid), Math.max(sid, tid)].join('-');
+    const total = pairTotal[key];
+    const idx = pairSeen[key] ?? 0;
+    pairSeen[key] = idx + 1;
+    l._arcOffset = total === 1 ? 0 : (idx - (total - 1) / 2) * 55;
+  });
+}
+
 function renderGraph() {
   getSize();
   gRoot.selectAll('*').remove();
@@ -478,10 +521,12 @@ function renderGraph() {
     target: typeof l.target === 'object' ? l.target : nodeMap.get(l.target),
   })).filter(l => l.source && l.target);
 
+  annotateArcs(links);
+
   // EDGES
   const linkG = gRoot.append('g');
   const linkGroups = linkG.selectAll('g').data(links).enter().append('g');
-  linkGroups.append('line').attr('class', 'link').attr('marker-end', 'url(#arrow)');
+  linkGroups.append('path').attr('class', 'link').attr('marker-end', 'url(#arrow)');
   linkGroups.append('text').attr('class', 'link-label')
     .text(d => d.label + (d.note ? ` [${d.note}]` : ''));
 
@@ -511,12 +556,11 @@ function renderGraph() {
   });
 
   simulation.nodes(graphNodes).on('tick', () => {
-    linkGroups.select('line')
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-    linkGroups.select('text')
-      .attr('x', d => (d.source.x + d.target.x) / 2)
-      .attr('y', d => (d.source.y + d.target.y) / 2 - 4);
+    linkGroups.select('path').attr('d', d => arcPath(d));
+    linkGroups.select('text').each(function(d) {
+      const mid = arcMidpoint(d);
+      d3.select(this).attr('x', mid.x).attr('y', mid.y - 4);
+    });
     nodeGroups.attr('transform', d => `translate(${d.x},${d.y})`);
   });
 
@@ -532,18 +576,17 @@ function renderGraph() {
 // ═══════════════════════════════════════════════════════════════════════════════
 function applyFilters() {
   const allNodes  = gRoot.selectAll('.node');
-  const allLinkGs = gRoot.selectAll('g g'); // link groups
 
   if (!activeFilter && !selectedNode) {
     allNodes.classed('faded', false);
-    gRoot.selectAll('line').classed('faded', false);
+    gRoot.selectAll('path.link').classed('faded', false);
     gRoot.selectAll('.link-label').classed('faded', false).classed('highlighted', false);
     return;
   }
 
   if (activeFilter && !selectedNode) {
     allNodes.classed('faded', d => d.type !== activeFilter);
-    gRoot.selectAll('line').classed('faded', d => {
+    gRoot.selectAll('path.link').classed('faded', d => {
       if (!d) return false;
       const st = typeof d.source === 'object' ? d.source.type : '';
       const tt = typeof d.target === 'object' ? d.target.type : '';
@@ -554,14 +597,14 @@ function applyFilters() {
 
   if (selectedNode) {
     const connectedIds = new Set([selectedNode.id]);
-    gRoot.selectAll('line').each(d => {
+    gRoot.selectAll('path.link').each(d => {
       if (!d) return;
       const sid = typeof d.source === 'object' ? d.source.id : d.source;
       const tid = typeof d.target === 'object' ? d.target.id : d.target;
       if (sid === selectedNode.id || tid === selectedNode.id) { connectedIds.add(sid); connectedIds.add(tid); }
     });
     allNodes.classed('faded', d => !connectedIds.has(d.id));
-    gRoot.selectAll('line').classed('faded', d => {
+    gRoot.selectAll('path.link').classed('faded', d => {
       if (!d) return false;
       const sid = typeof d.source === 'object' ? d.source.id : d.source;
       const tid = typeof d.target === 'object' ? d.target.id : d.target;
@@ -626,7 +669,6 @@ window.selectNodeById = function(id) {
     target: typeof l.target === 'object' ? l.target : nodeMap.get(l.target),
   }));
   selectNode(node, links);
-  // Pan camera to node
   if (node.x != null && node.y != null) {
     const t = d3.zoomTransform(svg.node());
     svg.transition().duration(400).call(zoom.transform,
@@ -649,7 +691,7 @@ document.getElementById('searchInput').addEventListener('input', function() {
   const q = this.value.toLowerCase().trim();
   if (!q) { clearSelection(); return; }
   gRoot.selectAll('.node').classed('faded', d => !d.name.toLowerCase().includes(q));
-  gRoot.selectAll('line').classed('faded', true);
+  gRoot.selectAll('path.link').classed('faded', true);
   gRoot.selectAll('.link-label').classed('faded', true);
 });
 
@@ -661,7 +703,7 @@ document.getElementById('searchInput').addEventListener('keydown', function(e) {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// LEGEND — built dynamically from data
+// LEGEND
 // ═══════════════════════════════════════════════════════════════════════════════
 function buildLegend() {
   const types = [...new Set(graphNodes.map(n => n.type))].sort();
