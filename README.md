@@ -1,5 +1,7 @@
 # Music Relationship Graph
 
+version 2
+
 An interactive, read-only graph for exploring relationships between musicians, bands, albums, labels, and more. Hosted on GitHub Pages; data lives in `relationships.csv` — edit the CSV and push to update the graph.
 
 ## Live app
