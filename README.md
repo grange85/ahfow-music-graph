@@ -6,7 +6,7 @@ An interactive graph for mapping relationships between musicians, bands, and art
 
 Once GitHub Pages is enabled, your app will be at:
 ```
-https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/
+https://grange85.github.io/ahfow-music-graph/
 ```
 
 ---
