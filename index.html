@@ -329,9 +329,26 @@
 <script>
 // ═══════════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
+// For a local/GitHub Pages CSV:      const CSV_URL = 'relationships.csv';
+// For a Google Sheets published CSV: const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/...';
 // ═══════════════════════════════════════════════════════════════════════════════
-// const CSV_URL = 'relationships.csv';
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSKUo_yx0B-e1gQNPrPdwmkC7ykv_p5nlBfoxF_rKd71AkELMWY2V0-2mpqU8ZOPNEFbUtKUsdRPWzb/pub?gid=1748948689&single=true&output=csv';
+const CSV_URL = 'relationships.csv';
+const CORS_PROXY = 'https://corsproxy.io/?';
+
+// Wraps fetch: uses CORS proxy automatically for cross-origin URLs (e.g. Google Sheets)
+function fetchCSV(url) {
+  const crossOrigin = url.startsWith('http') && !url.startsWith(location.origin);
+  const target = crossOrigin ? CORS_PROXY + encodeURIComponent(url) : url;
+  const bust = (url.includes('?') ? '&' : '?') + '_=' + Date.now();
+  return fetch(target + bust);
+}
+
+// Decide whether to use the proxy (needed for Google Sheets and other cross-origin URLs)
+function fetchURL(url) {
+  const needsProxy = url.startsWith('http') && !url.includes(location.hostname);
+  const finalURL = needsProxy ? CORS_PROXY + encodeURIComponent(url) : url;
+  return fetch(finalURL + (url.includes('?') ? '&' : '?') + '_=' + Date.now());
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NODE TYPE REGISTRY
@@ -755,7 +772,7 @@ async function loadData() {
   selectedNode = null; activeFilter = null;
 
   try {
-    const res = await fetch(CSV_URL + '?_=' + Date.now());
+    const res = await fetchCSV(CSV_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${CSV_URL}`);
     const text = await res.text();
     const rows = parseCSV(text);
